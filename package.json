@@ -1,0 +1,32 @@
+{
+  "name": "phone-no-verifier",
+  "version": "1.0.0",
+  "description": "A phone number verifier using sms otp",
+  "main": "server.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/oreHGA/phone-no-verifier.git"
+  },
+  "keywords": [
+    "otp"
+  ],
+  "author": "Oreoluwa Ogundipe",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/oreHGA/phone-no-verifier/issues"
+  },
+  "homepage": "https://github.com/oreHGA/phone-no-verifier#readme",
+  "dependencies": {
+    "body-parser": "^1.18.2",
+    "connect-multiparty": "^2.1.0",
+    "cors": "^2.8.4",
+    "ejs": "^2.5.7",
+    "express": "^4.16.2",
+    "https": "^1.0.0",
+    "querystring": "^0.2.0",
+    "request": "^2.83.0"
+  }
+}

@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Phone Number Verifier</title>
+    <script src="https://unpkg.com/vue"></script>
+    <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.2/css/bootstrap.min.css" integrity="sha384-PsH8R72JQ3SOdhVi3uxftmaW6Vc51MKb0q5P2rRUpPvrszuE4W1povHYgTpBfshb" crossorigin="anonymous">    
+</head>
+<body>  
+    <!-- simple header here -->
+    <nav class="navbar navbar-inverse navbar-fixed-top" style="background-color: rgb(53, 121, 153)">
+        <div class="container-fluid">
+            <div class="navbar-header">
+                <a class="navbar-brand" href="#">📞</a>
+            </div>
+            <p style="color:white;margin-top : 15px;">Phone Number Verifier</p>
+        </div>
+    </nav>
+
+
+    <div class="container" id="app">
+        <div class="row">
+            <div class="col-md-12 number-form">
+
+                <form @submit.prevent="onSubmit" class="form">
+                    <div class="form-group">
+                        <label for="">Enter Your Phone Number</label>
+                        <input type="tel" placeholder="eg. +234 800 000 0000" v-model="number">
+                    </div>
+                    
+                    <template v-if="received == true">
+                        <div class="form-group">
+                            <label for="">Enter One-Time Password</label>
+                            <input type="text" placeholder="6-digit code" v-model="password">
+                        </div>
+            
+                        <div>
+                            <button class="btn btn-primary" type="button" v-on:click="verifyOtp">Verify Code</button>
+                            <button class="btn btn-primary">Re-send Code</button>
+                        </div> 
+                    </template>
+                    <template v-else>
+                        <div>
+                            <button class="btn btn-primary">Send Code</button>
+                        </div> 
+                    </template>
+                </form>
+
+                <div v-if="status != '' || loading != ''"class=" alert-primary alert-dismissible fade show" role="alert">
+                    <p>{{ status }}</p>
+                    <p>{{ loading }}</p>
+                </div>
+                
+            </div>
+        </div>
+    </div>
+
+
+    <style>
+        .number-form{
+            text-align: center;
+            margin-top : 100px;
+            border-radius: 5px;
+            box-shadow: 1px 1px 1px 1px;
+        }
+        .form{
+            margin-top : 20px;
+            margin-bottom : 20px;
+        }
+        .body{
+            background-color: cornsilk;
+        }
+        .btn-primary{
+            background-color: rgb(53, 121, 153);
+        }
+    </style>
+
+    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.3/umd/popper.min.js" integrity="sha384-vFJXuSJphROIrBnz7yo7oB41mKfc8JzQZiCq4NCceLEaO4IHwicKwpJf9c9IpFgh" crossorigin="anonymous"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.2/js/bootstrap.min.js" integrity="sha384-alpBpkh1PFOepccYVYDB4do5UnbKysX5WZXm3XxPqe5iKTfUKjNkCk9SaVuEZflJ" crossorigin="anonymous"></script>
+    <script>
+        var app = new Vue({
+            el: '#app',
+            data : function(){
+                return {
+                    code: '',
+                    number: '',
+                    status: '',
+                    loading: '',
+                    password: '',
+                    received: false
+                }
+            },
+            methods : {
+                onSubmit : function(){
+                    this.status = '';
+                    this.received = false;
+                    const formData = new FormData()
+                    formData.append('number', this.number);
+                    this.loading = "Please wait..."
+                    // Post to server
+                    axios.post('http://localhost:3120/verify', formData)
+                    .then(res => {
+                        // Post a status message
+                        this.loading = '';
+                        //  now tell the user to enter 6-digit code sent to their phone number
+                        if( res.data.status == true ){
+                            this.code = res.data.code;
+                            this.received = true;
+                        }else{
+                            this.status = 'Sorry there was an issue verifying your phone number. Please try again';
+                        }
+                    })
+                },
+                verifyOtp : function(){
+                    // check if this.code and this.password are the same
+                    if( this.password == this.code ){
+                        this.status = "Number verified";
+                    }else{
+                        this.status = "Verification Failed";
+                    }
+                }
+            }
+        });
+    </script>
+</body>
+</html>
