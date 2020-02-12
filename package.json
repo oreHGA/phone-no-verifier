@@ -27,6 +27,6 @@
     "express": "^4.16.2",
     "https": "^1.0.0",
     "querystring": "^0.2.0",
-    "request": "^2.83.0"
+    "request": "^2.88.2"
   }
 }
